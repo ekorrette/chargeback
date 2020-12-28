@@ -69,16 +69,17 @@ const time = (func) => {
     return after - before;
 }
 
-const drawDebugMenu = (ticktime, rendertime) => {
+const drawDebugMenu = (universe, ticktime, rendertime) => {
     let debug = {
         width: 150,
-        height: 50
+        height: 80
     }
     ctx.fillStyle = "black";
 
     ctx.font = '10px monospace';
-    ctx.fillText(`Tick time: ${(ticktime).toFixed(2)} ms`, canvas.width - debug.width, canvas.height - debug.height)
-    ctx.fillText(`Render time: ${(rendertime).toFixed(2)} ms`, canvas.width - debug.width, canvas.height - debug.height + 20)
+    ctx.fillText(`Tick time: ${ticktime.toFixed(2)} ms`, canvas.width - debug.width, canvas.height - debug.height)
+    ctx.fillText(`Render time: ${rendertime.toFixed(2)} ms`, canvas.width - debug.width, canvas.height - debug.height + 20)
+    ctx.fillText(`Charge count: ${universe.charges_cnt()} `, canvas.width - debug.width, canvas.height - debug.height + 40)
 }
 
 
@@ -91,7 +92,7 @@ const renderLoop = () => {
     let rendertime = time(renderCharges);
 
     if(DEBUG) {
-        drawDebugMenu(ticktime, rendertime);
+        drawDebugMenu(universe, ticktime, rendertime);
     }
 
     requestAnimationFrame(renderLoop);
