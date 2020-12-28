@@ -3,7 +3,9 @@ import { memory } from "chargeback-game/chargeback_bg";
 import * as wasm from "chargeback-game";
 
 let universe = new wasm.Universe();
-universe.populate(100);
+console.log(universe);
+universe.populate(100)
+console.log(new Float32Array(memory.buffer, universe.phases_ptr(), 4*universe.charges_cnt()));
 
 // wasm.greet();
 

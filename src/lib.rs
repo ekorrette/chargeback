@@ -57,6 +57,7 @@ pub struct Universe {
 
 #[wasm_bindgen]
 impl Universe {
+    #[wasm_bindgen(constructor)]
     pub fn new() -> Universe {
         let t: f32 = 0.0;
         let charge_phase = Vec::new();
@@ -73,7 +74,7 @@ impl Universe {
         }
     }
 
-    pub fn populate(&mut self, n: u32) {
+    pub fn populate(&mut self, n: usize) {
         self.charge_phase.clear();
         self.charge_sign.clear();
         let mut rng = rand::thread_rng();
