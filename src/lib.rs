@@ -21,6 +21,11 @@ pub struct Vec2D {
     x: f32,
     y: f32,
 }
+impl Vec2D {
+    fn abs(self) -> f32 {
+        return self.x.hypot(self.y);
+    }
+}
 impl ops::Add<Vec2D> for Vec2D {
     type Output = Vec2D;
     fn add(self, other: Vec2D) -> Vec2D {
@@ -67,10 +72,10 @@ impl Universe {
 
         Universe {
             t,
-            k: 1e-5,
+            k: 1e3,
             width: 600.0,
             height: 800.0,
-            delta: 0.01,
+            delta: 1e-2,
             charge_phase,
             charge_sign,
         }
@@ -106,9 +111,12 @@ impl Universe {
         let n = self.charge_phase.len();
         for i in 0..n {
             for j in 0..n {
-                self.charge_phase[i].v = self.charge_phase[i].v
-                    + self.k * (self.charge_sign[i] as f32) * (self.charge_sign[j] as f32)
-                      * (self.charge_phase[i].p - self.charge_phase[j].p);
+                let r = self.charge_phase[i].p - self.charge_phase[j].p;
+                if(r.abs() >= 1e-9) {
+                    self.charge_phase[i].v = self.charge_phase[i].v
+                        + self.k * self.delta * (self.charge_sign[i] as f32) * (self.charge_sign[j] as f32)
+                         * r.abs().powi(-3) * r;
+                }
             }
         }
         for i in 0..n {
