@@ -52,7 +52,7 @@ impl Universe {
         Universe {
             t, delta, width, height, rng: rand::thread_rng(),
             charge_space: ChargeSpace::new(k),
-            player: Player { pos: Vec2D { x: width/2.0, y: height/2.0 }, charge_sign: 1 },
+            player: Player { pos: Vec2D { x: width/2.0, y: height/2.0 }, charge_sign: 1, health: 3, speed: 1.0 },
             enemies: Vec::new(),
         }
     }
@@ -88,5 +88,26 @@ impl Universe {
             enemy.act(self.t, &self.player, &mut self.charge_space, &mut self.rng);
         }
         self.t += self.delta;
+    }
+
+    pub fn get_player_x (&self) -> f32 {
+        return self.player.pos.x;
+    }
+
+    pub fn get_player_y (&self) -> f32 {
+        return self.player.pos.y;
+    }
+
+    pub fn get_player_charge (&self) -> i8 {
+        return self.player.charge_sign;
+    }
+
+
+    pub fn update_player(&mut self, x: f32, y: f32, switch_charge: bool) {
+        self.player.move_in_direction(x, y);
+
+        if switch_charge {
+            self.player.switch_charge();
+        }
     }
 }

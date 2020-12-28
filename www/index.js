@@ -2,12 +2,16 @@ import { memory } from "chargeback-game/chargeback_bg";
 
 import * as wasm from "chargeback-game";
 
-const DEBUG = true;
+let DEBUG = true;
 
 let universe = new wasm.Universe();
 console.log(universe);
 universe.populate(200);
 console.log(new Float32Array(memory.buffer, universe.phases_ptr(), 4*universe.charges_cnt()));
+
+let player_interaction = {
+    'x': 0, 'y': 0, 'switch_charge': false
+}
 
 // wasm.greet();
 
@@ -36,6 +40,22 @@ const renderCharges = () => {
         }
         ctx.fill();
     }
+}
+
+const renderPlayer = () => {
+    let x = universe.get_player_x();
+    let y = universe.get_player_y();
+    let charge = universe.get_player_charge();
+
+    ctx.beginPath();
+    ctx.rect(x, y, 50, 50);
+    if(charge > 0) {
+        ctx.fillStyle = "blue";
+    }
+    else {
+        ctx.fillStyle = "red";
+    }
+    ctx.fill();
 }
 
 const drawBackground = () => {
@@ -69,7 +89,7 @@ const time = (func) => {
     return after - before;
 }
 
-const drawDebugMenu = (universe, ticktime, rendertime) => {
+const drawDebugMenu = (universe, tick_time, render_time) => {
     let debug = {
         width: 150,
         height: 80
@@ -77,23 +97,54 @@ const drawDebugMenu = (universe, ticktime, rendertime) => {
     ctx.fillStyle = "black";
 
     ctx.font = '10px monospace';
-    ctx.fillText(`Tick time: ${ticktime.toFixed(2)} ms`, canvas.width - debug.width, canvas.height - debug.height)
-    ctx.fillText(`Render time: ${rendertime.toFixed(2)} ms`, canvas.width - debug.width, canvas.height - debug.height + 20)
+    ctx.fillText(`Tick time: ${tick_time.toFixed(2)} ms`, canvas.width - debug.width, canvas.height - debug.height)
+    ctx.fillText(`Render time: ${render_time.toFixed(2)} ms`, canvas.width - debug.width, canvas.height - debug.height + 20)
     ctx.fillText(`Charge count: ${universe.charges_cnt()} `, canvas.width - debug.width, canvas.height - debug.height + 40)
 }
+
+document.addEventListener('keydown', (event) => {
+    const key_name = event.key;
+
+    console.log(key_name);
+
+    switch (key_name) {
+        case 'ArrowUp': player_interaction.y = -1; break;
+        case 'ArrowDown': player_interaction.y = 1; break;
+        case 'ArrowLeft': player_interaction.x = -1; break;
+        case 'ArrowRight': player_interaction.x = 1; break;
+        case ' ': player_interaction.switch_charge = true; break;
+    }
+}, false);
+
+document.addEventListener('keyup', (event) => {
+    const key_name = event.key;
+
+    switch (key_name) {
+        case 'ArrowUp': player_interaction.y = 0; break;
+        case 'ArrowDown': player_interaction.y = 0; break;
+        case 'ArrowLeft': player_interaction.x = 0; break;
+        case 'ArrowRight': player_interaction.x = 0; break;
+    }
+}, false);
 
 
 const renderLoop = () => {
 
-    let ticktime = time(universe.tick.bind(universe));
+    let tick_time = time(universe.tick.bind(universe));
 
     drawBackground();
 
-    let rendertime = time(renderCharges);
+    let render_time = time( () => {
+        renderCharges();
+        renderPlayer();
+    });
 
     if(DEBUG) {
-        drawDebugMenu(universe, ticktime, rendertime);
+        drawDebugMenu(universe, tick_time, render_time);
     }
+
+    universe.update_player(player_interaction.x, player_interaction.y, player_interaction.switch_charge);
+    player_interaction.switch_charge = false;
 
     requestAnimationFrame(renderLoop);
 };
