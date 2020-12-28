@@ -29,7 +29,6 @@ extern {
 #[wasm_bindgen]
 pub struct Universe {
     t: f32,
-    k: f32,
     delta: f32,
     width: f32,
     height: f32,
@@ -51,8 +50,8 @@ impl Universe {
         let height: f32 = 800.0;
 
         Universe {
-            t, k, delta, width, height, rng: rand::thread_rng(),
-            charge_space: ChargeSpace::new(),
+            t, delta, width, height, rng: rand::thread_rng(),
+            charge_space: ChargeSpace::new(k),
             player: Player { pos: Vec2D { x: width/2.0, y: height/2.0 }, charge_sign: 1 },
             enemies: Vec::new(),
         }
@@ -83,28 +82,10 @@ impl Universe {
     }
 
     pub fn tick(&mut self) {
-        let n = self.charge_space.len();
-        for i in 0..n {
-            for j in 0..n {
-                let r = self.charge_space.phase[i].p - self.charge_space.phase[j].p;
-                self.charge_space.phase[i].v = self.charge_space.phase[i].v
-                    + self.k * self.delta * (self.charge_space.sign[i] as f32) * (self.charge_space.sign[j] as f32)
-                        * r.abs().max(4.0).powi(-3) * r;
-            }
-        }
-        for i in 0..n {
-            let p1 = self.charge_space.phase[i].p + self.delta * self.charge_space.phase[i].v;
-            if p1.x < 0.0 || p1.x > self.width {
-                self.charge_space.phase[i].v.x *= -1.0;
-            } else if p1.y < 0.0 /* || p1.y > self.height */ {
-                self.charge_space.phase[i].v.y *= -1.0;
-            } else {
-                self.charge_space.phase[i].p = p1;
-            }
-        }
+        self.charge_space.kinetic_tick(self.delta, self.width, self.height);
 
         for enemy in self.enemies.iter_mut() {
-            enemy.act(self.t, &self.player, &mut self.rng);
+            enemy.act(self.t, &self.player, &mut self.charge_space, &mut self.rng);
         }
         self.t += self.delta;
     }

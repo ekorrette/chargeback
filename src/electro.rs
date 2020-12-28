@@ -6,13 +6,14 @@ pub struct ChargePhase {
 }
 
 pub struct ChargeSpace {
+    pub k: f32,
     pub phase: Vec<ChargePhase>,
     pub sign: Vec<i8>,
 }
 
 impl ChargeSpace {
-    pub fn new() -> ChargeSpace {
-        ChargeSpace { phase: Vec::new(), sign: Vec::new() }
+    pub fn new(k: f32) -> ChargeSpace {
+        ChargeSpace { k, phase: Vec::new(), sign: Vec::new() }
     }
 
     pub fn clear(&mut self) {
@@ -29,4 +30,31 @@ impl ChargeSpace {
         self.sign.push(s);
     }
 
+    pub fn exerted_force(&self, p: Vec2D, sign: i8) -> Vec2D {
+        let n = self.len();
+        let mut f = Vec2D { x: 0.0, y: 0.0 };
+        for i in 0..n {
+            let r = p - self.phase[i].p;
+            f = f + self.k * (sign as f32) * (self.sign[i] as f32)
+                 * r.abs().max(4.0).powi(-3) * r;
+        }
+        f
+    }
+
+    pub fn kinetic_tick(&mut self, delta: f32, width: f32, height: f32) {
+        let n = self.len();
+        for i in 0..n {
+            self.phase[i].v = self.phase[i].v + self.exerted_force(self.phase[i].p, self.sign[i]);
+        }
+        for i in 0..n {
+            let p1 = self.phase[i].p + delta * self.phase[i].v;
+            if p1.x < 0.0 || p1.x > width {
+                self.phase[i].v.x *= -1.0;
+            } else if p1.y < 0.0 /* || p1.y > height */ {
+                self.phase[i].v.y *= -1.0;
+            } else {
+                self.phase[i].p = p1;
+            }
+        }
+    }
 }
