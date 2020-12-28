@@ -23,9 +23,6 @@ const renderCharges = () => {
         let x = positions[4 * i];
         let y = positions[4 * i + 1];
         let sign = signs[i];
-        if (i == 0) {
-            console.log(x, y, positions[4 * i + 2], positions[4 * i + 3]);
-        }
 
         ctx.beginPath();
         ctx.arc(x, y, 3, 0, 2 * Math.PI);
