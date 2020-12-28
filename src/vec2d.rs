@@ -7,7 +7,10 @@ pub struct Vec2D {
 }
 impl Vec2D {
     pub fn abs(self) -> f32 {
-        return self.x.hypot(self.y);
+        self.x.hypot(self.y)
+    }
+    pub fn norm(self) -> Vec2D {
+        self / self.abs()
     }
 }
 impl ops::Add<Vec2D> for Vec2D {
@@ -26,5 +29,17 @@ impl ops::Mul<Vec2D> for f32 {
     type Output = Vec2D;
     fn mul(self, v: Vec2D) -> Vec2D {
         Vec2D { x: self * v.x, y: self * v.y }
+    }
+}
+impl ops::Mul<f32> for Vec2D {
+    type Output = Vec2D;
+    fn mul(self, a: f32) -> Vec2D {
+        Vec2D { x: self.x * a, y: self.y * a }
+    }
+}
+impl ops::Div<f32> for Vec2D {
+    type Output = Vec2D;
+    fn div(self, a: f32) -> Vec2D {
+        Vec2D { x: self.x / a, y: self.y / a }
     }
 }
