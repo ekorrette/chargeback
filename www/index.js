@@ -2,6 +2,8 @@ import { memory } from "chargeback-game/chargeback_bg";
 
 import * as wasm from "chargeback-game";
 
+const DEBUG = true;
+
 let universe = new wasm.Universe();
 console.log(universe);
 universe.populate(20);
@@ -72,9 +74,10 @@ const drawDebugMenu = (ticktime, rendertime) => {
         width: 150,
         height: 50
     }
+    ctx.fillStyle = "black";
 
-    ctx.fillText(`Tick time: ${(ticktime*100).toFixed(2)}`, canvas.width - debug.width, canvas.height - debug.height)
-    ctx.fillText(`Render time: ${(rendertime*100).toFixed(2)}`, canvas.width - debug.width, canvas.height - debug.height + 20)
+    ctx.fillText(`Tick time: ${(ticktime).toFixed(2)} ms`, canvas.width - debug.width, canvas.height - debug.height)
+    ctx.fillText(`Render time: ${(rendertime).toFixed(2)} ms`, canvas.width - debug.width, canvas.height - debug.height + 20)
 }
 
 
@@ -86,7 +89,9 @@ const renderLoop = () => {
 
     let rendertime = time(renderCharges);
 
-    drawDebugMenu(ticktime, rendertime);
+    if(DEBUG) {
+        drawDebugMenu(ticktime, rendertime);
+    }
 
     requestAnimationFrame(renderLoop);
 };
