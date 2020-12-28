@@ -9,7 +9,7 @@ canvas.width = 600;
 canvas.height = 800;
 const ctx = canvas.getContext('2d');
 
-const renderLoop = () => {
+const drawTestRects = () => {
     ctx.beginPath();
     ctx.rect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = "white";
@@ -24,7 +24,12 @@ const renderLoop = () => {
     ctx.rect(40, 40, 150, 100);
     ctx.fillStyle = "blue";
     ctx.fill();
+};
 
+
+
+const renderLoop = () => {
+    drawTestRects();
     requestAnimationFrame(renderLoop);
 };
 
