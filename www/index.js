@@ -4,7 +4,7 @@ import * as wasm from "chargeback-game";
 
 let universe = new wasm.Universe();
 console.log(universe);
-universe.populate(1000);
+universe.populate(20);
 console.log(new Float32Array(memory.buffer, universe.phases_ptr(), 4*universe.charges_cnt()));
 
 // wasm.greet();
@@ -28,7 +28,7 @@ const renderCharges = () => {
         }
 
         ctx.beginPath();
-        ctx.arc(x, y, 2, 0, 2 * Math.PI);
+        ctx.arc(x, y, 3, 0, 2 * Math.PI);
         if (sign > 0) {
             ctx.fillStyle = "blue";
         }
@@ -63,11 +63,34 @@ const drawTestRects = () => {
     ctx.fill();
 };
 
+const time = (func) => {
+    let before = performance.now();
+    func();
+    let after = performance.now();
+    return after - before;
+}
+
+const drawDebugMenu = (ticktime, rendertime) => {
+    let debug = {
+        width: 150,
+        height: 50
+    }
+
+    ctx.fillText(`Tick time: ${(ticktime*100).toFixed(2)}`, canvas.width - debug.width, canvas.height - debug.height)
+    ctx.fillText(`Render time: ${(rendertime*100).toFixed(2)}`, canvas.width - debug.width, canvas.height - debug.height + 20)
+}
+
 
 const renderLoop = () => {
-    universe.tick();
+
+    let ticktime = time(universe.tick.bind(universe));
+
     drawBackground();
-    renderCharges();
+
+    let rendertime = time(renderCharges);
+
+    drawDebugMenu(ticktime, rendertime);
+
     requestAnimationFrame(renderLoop);
 };
 
