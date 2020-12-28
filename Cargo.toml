@@ -1,7 +1,7 @@
 [package]
 name = "chargeback"
 version = "0.1.0"
-authors = ["Lily <lilywiwior@gmail.com>"]
+authors = ["Lily <lilywiwior@gmail.com>", "Kubin <kbachurski@gmail.com>"]
 edition = "2018"
 
 [lib]
@@ -12,6 +12,7 @@ default = ["console_error_panic_hook"]
 
 [dependencies]
 wasm-bindgen = "*"
+rand = { version = "0.7.3", features = ["wasm-bindgen"] }
 
 # The `console_error_panic_hook` crate provides better debugging of panics by
 # logging them with `console.error`. This is great for development, but requires
@@ -25,6 +26,7 @@ console_error_panic_hook = { version = "*", optional = true }
 #
 # Unfortunately, `wee_alloc` requires nightly Rust when targeting wasm for now.
 wee_alloc = { version = "*", optional = true }
+
 
 [dev-dependencies]
 wasm-bindgen-test = "*"
