@@ -67,7 +67,7 @@ impl Universe {
 
         Universe {
             t,
-            k: 1e-6,
+            k: 1e-5,
             width: 600.0,
             height: 800.0,
             delta: 0.01,
@@ -88,7 +88,7 @@ impl Universe {
                 },
                 v: Vec2D { x: 0.0, y: 0.0, },
             });
-            self.charge_sign.push(2*rng.gen_range(0, 1) - 1);
+            self.charge_sign.push(2*rng.gen_range(0, 2) - 1);
         }
     }
 
@@ -108,7 +108,7 @@ impl Universe {
             for j in 0..n {
                 self.charge_phase[i].v = self.charge_phase[i].v
                     + self.k * (self.charge_sign[i] as f32) * (self.charge_sign[j] as f32)
-                      * (self.charge_phase[j].p - self.charge_phase[i].p);
+                      * (self.charge_phase[i].p - self.charge_phase[j].p);
             }
         }
         for i in 0..n {
