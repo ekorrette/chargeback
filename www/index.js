@@ -1,8 +1,11 @@
-// import { memory } from "chargeback/chargeback_bg";
+import { memory } from "chargeback-game/chargeback_bg";
 
 import * as wasm from "chargeback-game";
 
-wasm.greet();
+let universe = new wasm.Universe();
+universe.populate(100);
+
+// wasm.greet();
 
 const canvas = document.getElementById("chargeback-canvas");
 canvas.width = 600;
@@ -25,7 +28,6 @@ const drawTestRects = () => {
     ctx.fillStyle = "blue";
     ctx.fill();
 };
-
 
 
 const renderLoop = () => {

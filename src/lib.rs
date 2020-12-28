@@ -16,7 +16,7 @@ extern {
     fn alert(s: &str);
 }
 
-struct Vec2D {
+pub struct Vec2D {
     x: f32,
     y: f32,
 }
@@ -39,8 +39,7 @@ impl ops::Mul<Vec2D> for f32 {
     }
 }
 
-
-struct ChargeUnit {
+pub struct ChargePhase {
     p: Vec2D,
     v: Vec2D,
 }
@@ -52,7 +51,7 @@ pub struct Universe {
     width: f32,
     height: f32,
     delta: f32,
-    charge_phase: Vec<ChargeUnit>,
+    charge_phase: Vec<ChargePhase>,
     charge_sign: Vec<i8>,
 }
 
@@ -79,7 +78,7 @@ impl Universe {
         self.charge_sign.clear();
         let mut rng = rand::thread_rng();
         for _ in 0..n {
-            self.charge_phase.push(ChargeUnit {
+            self.charge_phase.push(ChargePhase {
                 p: Vec2D {
                     x: rng.gen_range(0.0, self.width),
                     y: rng.gen_range(0.0, self.height),
@@ -89,13 +88,25 @@ impl Universe {
             self.charge_sign.push(2*rng.gen_range(0, 1) - 1);
         }
     }
+
+
+    pub fn charges_cnt(&self) -> usize {
+        self.charge_phase.len()
+    }
+    pub fn phases_ptr(&self) -> *const ChargePhase {
+        self.charge_phase.as_ptr()
+    }
+    pub fn signs_ptr(&self) -> *const i8 {
+        self.charge_sign.as_ptr()
+    }
+
     /*
     pub fn tick(&mut self) {
         let n = self.charge_phase.len();
         for i in 0..n {
-            let ChargeUnit {p: mut pi, v: mut vi} = &self.charge_phase[i];
+            let ChargePhase {p: mut pi, v: mut vi} = &self.charge_phase[i];
             for j in 0..n {
-                let ChargeUnit {p: pj, v: vj} = &self.charge_phase[i];
+                let ChargePhase {p: pj, v: vj} = &self.charge_phase[i];
             }
         }
         for i in 0..n {
