@@ -108,7 +108,7 @@ impl Universe {
             for j in 0..n {
                 self.charge_phase[i].v = self.charge_phase[i].v
                     + self.k * (self.charge_sign[i] as f32) * (self.charge_sign[j] as f32)
-                      * (self.charge_phase[i].p - self.charge_phase[j].p);
+                      * (self.charge_phase[j].p - self.charge_phase[i].p);
             }
         }
         for i in 0..n {
