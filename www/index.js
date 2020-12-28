@@ -14,17 +14,24 @@ canvas.width = 600;
 canvas.height = 800;
 const ctx = canvas.getContext('2d');
 
-const renderMissiles = () => {
+const renderCharges = () => {
 
-    let array = new Float32Array(memory.buffer, universe.phases_ptr(), 4*universe.charges_cnt());
+    let positions = new Float32Array(memory.buffer, universe.phases_ptr(), 4*universe.charges_cnt());
+    let signs = new Int8Array(memory.buffer, universe.signs_ptr(), universe.charges_cnt());
 
     for(let i = 0; i < universe.charges_cnt(); i++) {
-        let x = array[4*i];
-        let y = array[4*i+1];
+        let x = positions[4 * i];
+        let y = positions[4 * i + 1];
+        let sign = signs[i];
 
         ctx.beginPath();
         ctx.arc(x, y, 2, 0, 2 * Math.PI);
-        ctx.fillStyle = "red";
+        if (sign > 0) {
+            ctx.fillStyle = "blue";
+        }
+        else {
+            ctx.fillStyle = "red";
+        }
         ctx.fill();
     }
 }
@@ -57,7 +64,7 @@ const drawTestRects = () => {
 const renderLoop = () => {
     universe.tick();
     drawBackground();
-    renderMissiles();
+    renderCharges();
     requestAnimationFrame(renderLoop);
 };
 
