@@ -119,15 +119,15 @@ impl Universe {
         }
         for i in 0..n {
             let p1 = self.charge_phase[i].p + self.delta * self.charge_phase[i].v;
-            if (p1.x < 0.0 || p1.x > self.width) {
+            if p1.x < 0.0 || p1.x > self.width {
                 self.charge_phase[i].v.x *= -1.0;
-            } else if (p1.y < 0.0 /* || p1.y > self.height */ ) {
+            } else if p1.y < 0.0 /* || p1.y > self.height */ {
                 self.charge_phase[i].v.y *= -1.0;
             } else {
                 self.charge_phase[i].p = p1;
             }
-
         }
+        self.t += self.delta;
     }
 }
 
