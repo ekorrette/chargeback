@@ -1,9 +1,14 @@
 mod utils;
+mod vec2d;
+mod player;
 
 use std::vec::Vec;
-use std::ops;
+
 use rand::Rng;
 use wasm_bindgen::prelude::*;
+
+use vec2d::Vec2D;
+use player::Player;
 
 // When the `wee_alloc` feature is enabled, use `wee_alloc` as the global
 // allocator.
@@ -17,35 +22,6 @@ extern {
 }
 
 #[derive(Clone, Copy, Debug)]
-pub struct Vec2D {
-    x: f32,
-    y: f32,
-}
-impl Vec2D {
-    fn abs(self) -> f32 {
-        return self.x.hypot(self.y);
-    }
-}
-impl ops::Add<Vec2D> for Vec2D {
-    type Output = Vec2D;
-    fn add(self, other: Vec2D) -> Vec2D {
-        Vec2D { x: self.x + other.x, y: self.y + other.y }
-    }
-}
-impl ops::Sub<Vec2D> for Vec2D {
-    type Output = Vec2D;
-    fn sub(self, other: Vec2D) -> Vec2D {
-        Vec2D { x: self.x - other.x, y: self.y - other.y }
-    }
-}
-impl ops::Mul<Vec2D> for f32 {
-    type Output = Vec2D;
-    fn mul(self, v: Vec2D) -> Vec2D {
-        Vec2D { x: self * v.x, y: self * v.y }
-    }
-}
-
-#[derive(Clone, Copy, Debug)]
 pub struct ChargePhase {
     p: Vec2D,
     v: Vec2D,
@@ -55,29 +31,31 @@ pub struct ChargePhase {
 pub struct Universe {
     t: f32,
     k: f32,
+    delta: f32,
     width: f32,
     height: f32,
-    delta: f32,
     charge_phase: Vec<ChargePhase>,
     charge_sign: Vec<i8>,
+    player: Player,
 }
 
 #[wasm_bindgen]
 impl Universe {
     #[wasm_bindgen(constructor)]
     pub fn new() -> Universe {
+        utils::set_panic_hook();
         let t: f32 = 0.0;
+        let k: f32 = 1e6;
+        let delta: f32 = 1e-2;
+        let width: f32 = 600.0;
+        let height: f32 = 800.0;
         let charge_phase = Vec::new();
         let charge_sign = Vec::new();
 
         Universe {
-            t,
-            k: 1e6,
-            width: 600.0,
-            height: 800.0,
-            delta: 1e-2,
-            charge_phase,
-            charge_sign,
+            t, k, delta, width, height,
+            charge_phase, charge_sign,
+            player: Player { pos: Vec2D { x: width/2.0, y: height/2.0 }, charge_sign: 1 },
         }
     }
 
