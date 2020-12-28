@@ -6,7 +6,7 @@ const DEBUG = true;
 
 let universe = new wasm.Universe();
 console.log(universe);
-universe.populate(20);
+universe.populate(200);
 console.log(new Float32Array(memory.buffer, universe.phases_ptr(), 4*universe.charges_cnt()));
 
 // wasm.greet();
@@ -76,6 +76,7 @@ const drawDebugMenu = (ticktime, rendertime) => {
     }
     ctx.fillStyle = "black";
 
+    ctx.font = '10px monospace';
     ctx.fillText(`Tick time: ${(ticktime).toFixed(2)} ms`, canvas.width - debug.width, canvas.height - debug.height)
     ctx.fillText(`Render time: ${(rendertime).toFixed(2)} ms`, canvas.width - debug.width, canvas.height - debug.height + 20)
 }
