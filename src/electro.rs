@@ -44,7 +44,7 @@ impl ChargeSpace {
     pub fn kinetic_tick(&mut self, delta: f32, width: f32, height: f32) {
         let n = self.len();
         for i in 0..n {
-            self.phase[i].v = self.phase[i].v + self.exerted_force(self.phase[i].p, self.sign[i]);
+            self.phase[i].v = self.phase[i].v + delta * self.exerted_force(self.phase[i].p, self.sign[i]);
         }
         for i in 0..n {
             let p1 = self.phase[i].p + delta * self.phase[i].v;
