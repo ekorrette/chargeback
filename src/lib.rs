@@ -16,6 +16,7 @@ extern {
     fn alert(s: &str);
 }
 
+#[derive(Clone, Copy, Debug)]
 pub struct Vec2D {
     x: f32,
     y: f32,
@@ -39,6 +40,7 @@ impl ops::Mul<Vec2D> for f32 {
     }
 }
 
+#[derive(Clone, Copy, Debug)]
 pub struct ChargePhase {
     p: Vec2D,
     v: Vec2D,
@@ -90,7 +92,6 @@ impl Universe {
         }
     }
 
-
     pub fn charges_cnt(&self) -> usize {
         self.charge_phase.len()
     }
@@ -101,21 +102,19 @@ impl Universe {
         self.charge_sign.as_ptr()
     }
 
-    /*
     pub fn tick(&mut self) {
         let n = self.charge_phase.len();
         for i in 0..n {
-            let ChargePhase {p: mut pi, v: mut vi} = &self.charge_phase[i];
             for j in 0..n {
-                let ChargePhase {p: pj, v: vj} = &self.charge_phase[i];
+                self.charge_phase[i].v = self.charge_phase[i].v
+                    + self.k * (self.charge_sign[i] as f32) * (self.charge_sign[j] as f32)
+                      * (self.charge_phase[i].p - self.charge_phase[j].p);
             }
         }
         for i in 0..n {
-            let mut ph = &self.charge_phase[i];
-            ph.p = ph.p + self.delta * ph.v;
+            self.charge_phase[i].p = self.charge_phase[i].p + self.delta * self.charge_phase[i].v;
         }
     }
-    */
 }
 
 #[wasm_bindgen]
