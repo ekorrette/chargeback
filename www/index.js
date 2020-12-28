@@ -55,6 +55,7 @@ const drawTestRects = () => {
 
 
 const renderLoop = () => {
+    universe.tick();
     drawBackground();
     renderMissiles();
     requestAnimationFrame(renderLoop);

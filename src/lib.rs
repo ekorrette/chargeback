@@ -67,7 +67,7 @@ impl Universe {
 
         Universe {
             t,
-            k: 1.0,
+            k: 1e-6,
             width: 600.0,
             height: 800.0,
             delta: 0.01,
