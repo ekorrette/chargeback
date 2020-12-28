@@ -72,7 +72,7 @@ impl Universe {
 
         Universe {
             t,
-            k: 1e3,
+            k: 1e6,
             width: 600.0,
             height: 800.0,
             delta: 1e-2,
@@ -112,15 +112,21 @@ impl Universe {
         for i in 0..n {
             for j in 0..n {
                 let r = self.charge_phase[i].p - self.charge_phase[j].p;
-                if(r.abs() >= 1e-9) {
-                    self.charge_phase[i].v = self.charge_phase[i].v
-                        + self.k * self.delta * (self.charge_sign[i] as f32) * (self.charge_sign[j] as f32)
-                         * r.abs().powi(-3) * r;
-                }
+                self.charge_phase[i].v = self.charge_phase[i].v
+                    + self.k * self.delta * (self.charge_sign[i] as f32) * (self.charge_sign[j] as f32)
+                        * r.abs().max(4.0).powi(-3) * r;
             }
         }
         for i in 0..n {
-            self.charge_phase[i].p = self.charge_phase[i].p + self.delta * self.charge_phase[i].v;
+            let p1 = self.charge_phase[i].p + self.delta * self.charge_phase[i].v;
+            if (p1.x < 0.0 || p1.x > self.width) {
+                self.charge_phase[i].v.x *= -1.0;
+            } else if (p1.y < 0.0 /* || p1.y > self.height */ ) {
+                self.charge_phase[i].v.y *= -1.0;
+            } else {
+                self.charge_phase[i].p = p1;
+            }
+
         }
     }
 }
