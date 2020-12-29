@@ -61,7 +61,7 @@ impl Universe {
         let mut uni = Universe {
             t, delta, width, height, rng: rand::thread_rng(),
             charge_space: ChargeSpace::new(k),
-            player: Player { pos: Vec2D { x: width/2.0, y: height/2.0 }, charge_sign: 10, hp: 3, speed: 3.0 },
+            player: Player { pos: Vec2D { x: width/2.0, y: height/2.0 }, charge_sign: 8, hp: 3, speed: 3.0 },
             next_enemy_id: 1, enemies: Vec::new(),
         };
         uni.spawn_enemy(Vec2D { x: 300.0, y: 200.0 }, 5, EnemyState::RandShooterSleeping);

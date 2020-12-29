@@ -6,7 +6,7 @@ let DEBUG = true;
 
 let universe = new wasm.Universe();
 console.log(universe);
-universe.populate(200);
+universe.populate(20);
 
 let player_interaction = {
     'x': 0, 'y': 0, 'switch_charge': false
