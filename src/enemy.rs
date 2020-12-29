@@ -14,6 +14,7 @@ pub struct Enemy {
     pub pos: Vec2D,
     pub hp: i8,
     pub t0: f32,
+    pub frames: i32,
     pub state: EnemyState
 }
 
@@ -25,7 +26,10 @@ impl Enemy {
             }
         }
         if self.state == EnemyState::RandShooter {
-            if rng.gen_range(0, 20) == 0 {
+            if rng.gen_range(0, 20) == 0 && player.pos != self.pos {
+                let v: Vec2D = rng.gen_range(20.0, 40.0) * (player.pos - self.pos).norm();
+                let s: i8 = 2*rng.gen_range(0, 2) - 1;
+                charge_space.push(self.pos, v, s);
                 self.state = EnemyState::RandShooterSleeping;
             }
         }

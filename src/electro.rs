@@ -1,5 +1,3 @@
-use std::mem;
-
 use crate::vec2d::Vec2D;
 
 pub struct ChargePhase {
@@ -44,7 +42,7 @@ impl ChargeSpace {
     }
 
     pub fn kinetic_tick(&mut self, delta: f32, width: f32, height: f32) {
-        let mut n = self.len();
+        let n = self.len();
         for i in 0..n {
             self.phase[i].v = self.phase[i].v + delta * self.exerted_force(self.phase[i].p, self.sign[i]);
         }
@@ -60,7 +58,7 @@ impl ChargeSpace {
         }
         for i in (0..n).rev() {
             let p = self.phase[i].p;
-            if p.x < 0.0 || p.x > width || p.y < 0.0 || p.y > height {
+            if (p.x < 0.0 || p.x > width || p.y < 0.0 || p.y > height) || (p.x.is_nan() || p.y.is_nan()) {
                 self.phase.remove(i); self.sign.remove(i);
             }
         }

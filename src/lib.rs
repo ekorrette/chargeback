@@ -14,6 +14,7 @@ use electro::ChargeSpace;
 use electro::ChargePhase;
 use player::Player;
 use enemy::Enemy;
+use enemy::EnemyState;
 
 // When the `wee_alloc` feature is enabled, use `wee_alloc` as the global
 // allocator.
@@ -35,7 +36,15 @@ pub struct Universe {
     rng: rand::rngs::ThreadRng,
     charge_space: ChargeSpace,
     player: Player,
+    next_enemy_id: i32,
     enemies: Vec<Enemy>,
+}
+
+impl Universe {
+    pub fn spawn_enemy(&mut self, pos: Vec2D, hp: i8, state: EnemyState) {
+        self.enemies.push(Enemy {id: self.next_enemy_id, pos, hp, t0: self.t, frames: 0, state});
+        self.next_enemy_id += 1;
+    }
 }
 
 #[wasm_bindgen]
@@ -49,12 +58,15 @@ impl Universe {
         let width: f32 = 600.0;
         let height: f32 = 800.0;
 
-        Universe {
+        let mut uni = Universe {
             t, delta, width, height, rng: rand::thread_rng(),
             charge_space: ChargeSpace::new(k),
-            player: Player { pos: Vec2D { x: width/2.0, y: height/2.0 }, charge_sign: 1, health: 3, speed: 1.0 },
-            enemies: Vec::new(),
-        }
+            player: Player { pos: Vec2D { x: width/2.0, y: height/2.0 }, charge_sign: 1, hp: 3, speed: 1.0 },
+            next_enemy_id: 1, enemies: Vec::new(),
+        };
+        uni.spawn_enemy(Vec2D { x: 300.0, y: 200.0 }, 5, EnemyState::RandShooterSleeping);
+
+        uni
     }
 
     pub fn populate(&mut self, n: usize) {
@@ -71,14 +83,12 @@ impl Universe {
         }
     }
 
-    pub fn charges_cnt(&self) -> usize {
-        self.charge_space.len()
-    }
-    pub fn phases_ptr(&self) -> *const ChargePhase {
-        self.charge_space.phase.as_ptr()
-    }
-    pub fn signs_ptr(&self) -> *const i8 {
-        self.charge_space.sign.as_ptr()
+    pub fn interact(&mut self, x: f32, y: f32, switch_charge: bool) {
+        self.player.move_in_direction(x, y);
+
+        if switch_charge {
+            self.player.switch_charge();
+        }
     }
 
     pub fn tick(&mut self) {
@@ -90,24 +100,24 @@ impl Universe {
         self.t += self.delta;
     }
 
+
+    pub fn charges_cnt(&self) -> usize {
+        self.charge_space.len()
+    }
+    pub fn phases_ptr(&self) -> *const ChargePhase {
+        self.charge_space.phase.as_ptr()
+    }
+    pub fn signs_ptr(&self) -> *const i8 {
+        self.charge_space.sign.as_ptr()
+    }
+
     pub fn get_player_x (&self) -> f32 {
         return self.player.pos.x;
     }
-
     pub fn get_player_y (&self) -> f32 {
         return self.player.pos.y;
     }
-
     pub fn get_player_charge (&self) -> i8 {
         return self.player.charge_sign;
-    }
-
-
-    pub fn update_player(&mut self, x: f32, y: f32, switch_charge: bool) {
-        self.player.move_in_direction(x, y);
-
-        if switch_charge {
-            self.player.switch_charge();
-        }
     }
 }
