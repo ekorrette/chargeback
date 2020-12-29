@@ -42,12 +42,15 @@ const renderCharges = () => {
 }
 
 const renderPlayer = () => {
+    let width = 40;
+    let height = 40;
+
     let x = universe.get_player_x();
     let y = universe.get_player_y();
     let charge = universe.get_player_charge();
 
     ctx.beginPath();
-    ctx.rect(x, y, 50, 50);
+    ctx.rect(x - width/2, y - height/2, width, height);
     if(charge > 0) {
         ctx.fillStyle = "blue";
     }
