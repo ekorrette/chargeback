@@ -61,7 +61,7 @@ impl Universe {
         let mut uni = Universe {
             t, delta, width, height, rng: rand::thread_rng(),
             charge_space: ChargeSpace::new(k),
-            player: Player { pos: Vec2D { x: width/2.0, y: height/2.0 }, charge_sign: 1, hp: 3, speed: 1.0 },
+            player: Player { pos: Vec2D { x: width/2.0, y: height/2.0 }, charge_sign: 100, hp: 3, speed: 1.0 },
             next_enemy_id: 1, enemies: Vec::new(),
         };
         uni.spawn_enemy(Vec2D { x: 300.0, y: 200.0 }, 5, EnemyState::RandShooterSleeping);
@@ -97,6 +97,7 @@ impl Universe {
         for enemy in self.enemies.iter_mut() {
             enemy.act(self.t, &self.player, &mut self.charge_space, &mut self.rng);
         }
+        self.player.update(self.delta, &mut self.charge_space, &self.enemies);
         self.t += self.delta;
     }
 
@@ -114,9 +115,11 @@ impl Universe {
     pub fn get_player_x (&self) -> f32 {
         return self.player.pos.x;
     }
+
     pub fn get_player_y (&self) -> f32 {
         return self.player.pos.y;
     }
+
     pub fn get_player_charge (&self) -> i8 {
         return self.player.charge_sign;
     }

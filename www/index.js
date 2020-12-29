@@ -7,7 +7,6 @@ let DEBUG = true;
 let universe = new wasm.Universe();
 console.log(universe);
 universe.populate(200);
-console.log(new Float32Array(memory.buffer, universe.phases_ptr(), 4*universe.charges_cnt()));
 
 let player_interaction = {
     'x': 0, 'y': 0, 'switch_charge': false
