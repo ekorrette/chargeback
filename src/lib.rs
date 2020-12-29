@@ -53,7 +53,7 @@ impl Universe {
     pub fn new() -> Universe {
         utils::set_panic_hook();
         let t: f32 = 0.0;
-        let k: f32 = 1e6;
+        let k: f32 = 1e4;
         let delta: f32 = 0.0166;
         let width: f32 = 600.0;
         let height: f32 = 800.0;
@@ -61,7 +61,7 @@ impl Universe {
         let mut uni = Universe {
             t, delta, width, height, rng: rand::thread_rng(),
             charge_space: ChargeSpace::new(k),
-            player: Player { pos: Vec2D { x: width/2.0, y: height/2.0 }, charge_sign: 100, hp: 3, speed: 1.0 },
+            player: Player { pos: Vec2D { x: width/2.0, y: height/2.0 }, charge_sign: 10, hp: 3, speed: 3.0 },
             next_enemy_id: 1, enemies: Vec::new(),
         };
         uni.spawn_enemy(Vec2D { x: 300.0, y: 200.0 }, 5, EnemyState::RandShooterSleeping);
