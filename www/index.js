@@ -12,7 +12,6 @@ let player_interaction = {
     'x': 0, 'y': 0, 'switch_charge': false
 }
 
-// wasm.greet();
 
 const canvas = document.getElementById("chargeback-canvas");
 canvas.width = 600;
