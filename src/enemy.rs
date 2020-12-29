@@ -9,6 +9,7 @@ pub enum EnemyState {
     RandShooterSleeping,
 }
 
+
 pub struct Enemy {
     pub id: i32,
     pub pos: Vec2D,

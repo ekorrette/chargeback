@@ -2,14 +2,17 @@ import { memory } from "chargeback-game/chargeback_bg";
 
 import * as wasm from "chargeback-game";
 
-let DEBUG = true;
+let DEBUG = false;
+let POSITIVE_COLOR = 'blue'
+let NEGATIVE_COLOR = 'red'
+let BACKGROUND_COLOR = 'black'
 
 let universe = new wasm.Universe();
 console.log(universe);
 universe.populate(20);
 
 let player_interaction = {
-    'x': 0, 'y': 0, 'switch_charge': false
+    'left': 0, 'right': 0, 'up': 0, 'down': 0, 'switch_charge': false
 }
 
 
@@ -31,10 +34,10 @@ const renderCharges = () => {
         ctx.beginPath();
         ctx.arc(x, y, 3, 0, 2 * Math.PI);
         if (sign > 0) {
-            ctx.fillStyle = "blue";
+            ctx.fillStyle = POSITIVE_COLOR;
         }
         else {
-            ctx.fillStyle = "red";
+            ctx.fillStyle = NEGATIVE_COLOR;
         }
         ctx.fill();
     }
@@ -44,17 +47,15 @@ const renderPlayer = () => {
     let width = 40;
     let height = 40;
 
-    let x = universe.get_player_x();
-    let y = universe.get_player_y();
-    let charge = universe.get_player_charge();
+    let player = universe.get_player();
 
     ctx.beginPath();
-    ctx.rect(x - width/2, y - height/2, width, height);
-    if(charge > 0) {
-        ctx.fillStyle = "blue";
+    ctx.rect(player.pos.x - width/2, player.pos.y - height/2, width, height);
+    if(player.charge_sign > 0) {
+        ctx.fillStyle = POSITIVE_COLOR;
     }
     else {
-        ctx.fillStyle = "red";
+        ctx.fillStyle = NEGATIVE_COLOR;
     }
     ctx.fill();
 }
@@ -62,26 +63,9 @@ const renderPlayer = () => {
 const drawBackground = () => {
     ctx.beginPath();
     ctx.rect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = "white";
+    ctx.fillStyle = BACKGROUND_COLOR;
     ctx.fill();
 }
-
-const drawTestRects = () => {
-    ctx.beginPath();
-    ctx.rect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = "white";
-    ctx.fill();
-
-    ctx.beginPath();
-    ctx.rect(20, 20, 150, 100);
-    ctx.fillStyle = "red";
-    ctx.fill();
-
-    ctx.beginPath();
-    ctx.rect(40, 40, 150, 100);
-    ctx.fillStyle = "blue";
-    ctx.fill();
-};
 
 const time = (func) => {
     let before = performance.now();
@@ -109,11 +93,12 @@ document.addEventListener('keydown', (event) => {
     console.log(key_name);
 
     switch (key_name) {
-        case 'ArrowUp': player_interaction.y = -1; break;
-        case 'ArrowDown': player_interaction.y = 1; break;
-        case 'ArrowLeft': player_interaction.x = -1; break;
-        case 'ArrowRight': player_interaction.x = 1; break;
+        case 'ArrowUp': player_interaction.up = 1; break;
+        case 'ArrowDown': player_interaction.down = 1; break;
+        case 'ArrowLeft': player_interaction.left = 1; break;
+        case 'ArrowRight': player_interaction.right = 1; break;
         case ' ': player_interaction.switch_charge = true; break;
+        case 'F2': DEBUG = !DEBUG;
     }
 }, false);
 
@@ -121,10 +106,10 @@ document.addEventListener('keyup', (event) => {
     const key_name = event.key;
 
     switch (key_name) {
-        case 'ArrowUp': player_interaction.y = 0; break;
-        case 'ArrowDown': player_interaction.y = 0; break;
-        case 'ArrowLeft': player_interaction.x = 0; break;
-        case 'ArrowRight': player_interaction.x = 0; break;
+        case 'ArrowUp': player_interaction.up = 0; break;
+        case 'ArrowDown': player_interaction.down = 0; break;
+        case 'ArrowLeft': player_interaction.left = 0; break;
+        case 'ArrowRight': player_interaction.right = 0; break;
     }
 }, false);
 
@@ -144,7 +129,9 @@ const renderLoop = () => {
         drawDebugMenu(universe, tick_time, render_time);
     }
 
-    universe.interact(player_interaction.x, player_interaction.y, player_interaction.switch_charge);
+    universe.interact(player_interaction.right - player_interaction.left,
+                      player_interaction.down - player_interaction.up,
+                         player_interaction.switch_charge);
     player_interaction.switch_charge = false;
 
     requestAnimationFrame(renderLoop);

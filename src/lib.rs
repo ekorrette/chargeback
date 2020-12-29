@@ -112,15 +112,7 @@ impl Universe {
         self.charge_space.sign.as_ptr()
     }
 
-    pub fn get_player_x (&self) -> f32 {
-        return self.player.pos.x;
-    }
-
-    pub fn get_player_y (&self) -> f32 {
-        return self.player.pos.y;
-    }
-
-    pub fn get_player_charge (&self) -> i8 {
-        return self.player.charge_sign;
+    pub fn get_player(&self) -> Player {
+        return self.player;
     }
 }

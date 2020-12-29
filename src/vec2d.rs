@@ -1,5 +1,8 @@
 use std::ops;
 
+use wasm_bindgen::prelude::*;
+
+#[wasm_bindgen]
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Vec2D {
     pub x: f32,
@@ -10,7 +13,12 @@ impl Vec2D {
         self.x.hypot(self.y)
     }
     pub fn norm(self) -> Vec2D {
-        self / self.abs()
+        let abs = self.abs();
+        return if abs > 0.0 {
+            self / abs
+        } else {
+            self
+        }
     }
 }
 impl ops::Add<Vec2D> for Vec2D {
