@@ -3,6 +3,13 @@ import { memory } from "../pkg/chargeback_bg";
 const POSITIVE_COLOR = 'blue'
 const NEGATIVE_COLOR = 'red'
 const BACKGROUND_COLOR = 'black'
+
+let pos_image = new Image();
+pos_image.src = "./assets/pos.png";
+let neg_image = new Image();
+neg_image.src = "./assets/neg.png";
+
+
 let starlets = [];
 
 const renderCharges = (ctx, universe) => {
@@ -38,14 +45,16 @@ const renderPlayer = (ctx, universe) => {
     let player = universe.get_player();
 
     ctx.beginPath();
-    ctx.rect(player.pos.x - width/2, player.pos.y - height/2, width, height);
+    let im = "";
     if(player.charge_sign > 0) {
-        ctx.fillStyle = POSITIVE_COLOR;
+        im = pos_image;
     }
     else {
-        ctx.fillStyle = NEGATIVE_COLOR;
+        im = neg_image;
     }
-    ctx.fill();
+    ctx.drawImage(im, player.pos.x - width/2, player.pos.y - height/2, width, height);
+    // ctx.rect(player.pos.x - width/2, player.pos.y - height/2, width, height);
+    // ctx.fill();
 }
 
 const drawBackground = (canvas, ctx) => {
