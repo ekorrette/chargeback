@@ -5,6 +5,7 @@ mod player;
 mod enemy;
 
 use std::vec::Vec;
+use std::iter::FromIterator;
 
 use rand::Rng;
 use wasm_bindgen::prelude::*;
@@ -64,7 +65,11 @@ impl Universe {
             player: Player { pos: Vec2D { x: width/2.0, y: height/2.0 }, charge_sign: 12, hp: 3, speed: 3.0 },
             next_enemy_id: 1, enemies: Vec::new(),
         };
+        uni.spawn_enemy(Vec2D { x: 200.0, y: 200.0 }, 5, EnemyState::RandShooterSleeping);
+        uni.spawn_enemy(Vec2D { x: 400.0, y: 200.0 }, 5, EnemyState::RandShooterSleeping);
+        uni.spawn_enemy(Vec2D { x: 250.0, y: 200.0 }, 5, EnemyState::RandShooterSleeping);
         uni.spawn_enemy(Vec2D { x: 300.0, y: 200.0 }, 5, EnemyState::RandShooterSleeping);
+        uni.spawn_enemy(Vec2D { x: 350.0, y: 200.0 }, 5, EnemyState::RandShooterSleeping);
 
         uni
     }
@@ -94,9 +99,11 @@ impl Universe {
     pub fn tick(&mut self) {
         self.charge_space.kinetic_tick(self.delta, self.width, self.height);
 
+        let enemy_pos = Vec::from_iter(self.enemies.iter().map(|x| x.pos));
         for enemy in self.enemies.iter_mut() {
-            enemy.act(self.t, &self.player, &mut self.charge_space, &mut self.rng);
+            enemy.act(self.t, self.delta, &mut self.charge_space, &self.player, &enemy_pos, &mut self.rng);
         }
+
         self.player.update(self.delta, &mut self.charge_space, &self.enemies);
         self.t += self.delta;
     }
@@ -120,5 +127,9 @@ impl Universe {
 
     pub fn get_player(&self) -> Player {
         return self.player;
+    }
+
+    pub fn get_dbg_dir_priority(&self, i: usize, j: usize) -> f32 {
+        self.enemies[i].grade_direction(j, &self.charge_space, &self.player, &Vec::from_iter(self.enemies.iter().map(|x| x.pos))).0
     }
 }

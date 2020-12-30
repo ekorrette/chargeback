@@ -9,6 +9,12 @@ pub struct Vec2D {
     pub y: f32,
 }
 impl Vec2D {
+    pub fn zero() -> Vec2D {
+        Vec2D {x: 0.0, y: 0.0}
+    }
+    pub fn polar(alpha: f32) -> Vec2D {
+        Vec2D {x: alpha.cos(), y: alpha.sin()}
+    }
     pub fn abs(self) -> f32 {
         self.x.hypot(self.y)
     }
@@ -20,7 +26,11 @@ impl Vec2D {
             self
         }
     }
+    pub fn dot(self, other: Vec2D) -> f32 {
+        self.x*other.x + self.y*other.y
+    }
 }
+
 impl ops::Add<Vec2D> for Vec2D {
     type Output = Vec2D;
     fn add(self, other: Vec2D) -> Vec2D {

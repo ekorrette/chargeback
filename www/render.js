@@ -93,6 +93,19 @@ const drawDebugMenu = (canvas, ctx, universe, tick_time, render_time) => {
     ctx.fillText(`Tick time: ${tick_time.toFixed(2)} ms`, canvas.width - debug.width, canvas.height - debug.height)
     ctx.fillText(`Render time: ${render_time.toFixed(2)} ms`, canvas.width - debug.width, canvas.height - debug.height + 20)
     ctx.fillText(`Charge count: ${universe.charges_cnt()} `, canvas.width - debug.width, canvas.height - debug.height + 40)
+
+    for(let i = 0; i < universe.enemies_cnt(); i++) {
+        let it = universe.enemies_idx(i);
+        for(let j = 0; j < 16; j++) {
+            let alpha = 2*Math.PI*j/16;
+            let pri = 100*universe.get_dbg_dir_priority(i, j);
+            ctx.beginPath();
+            ctx.strokeStyle = 'green';
+            ctx.moveTo(it.pos.x, it.pos.y);
+            ctx.lineTo(it.pos.x + pri*Math.cos(alpha), it.pos.y + pri*Math.sin(alpha));
+            ctx.stroke();
+        }
+    }
 }
 
 export { renderPlayer, drawBackground, renderCharges, drawDebugMenu, renderEnemies }
