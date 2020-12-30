@@ -1,8 +1,9 @@
-import {memory} from "../pkg/chargeback_bg";
+import { memory } from "../pkg/chargeback_bg";
 
 const POSITIVE_COLOR = 'blue'
 const NEGATIVE_COLOR = 'red'
 const BACKGROUND_COLOR = 'black'
+let starlets = [];
 
 const renderCharges = (ctx, universe) => {
 
@@ -52,6 +53,21 @@ const drawBackground = (canvas, ctx) => {
     ctx.rect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = BACKGROUND_COLOR;
     ctx.fill();
+
+    if(Math.random() <= 0.025) {
+        starlets.push({x: Math.random() * 600.0, y: 10.0, f: Math.random() * 100.0});
+    }
+    while(starlets.length > 0 && starlets[0].y > 800.0) {
+        starlets.shift();
+    }
+    starlets.forEach((starlet) => {
+        starlet.y += 0.0166 * 100.0;
+        starlet.f += 1;
+        ctx.beginPath();
+        ctx.fillStyle = 'white';
+        ctx.arc(starlet.x, starlet.y, (1.5+Math.sin(starlet.f/40)) * 0.6, 0, 2 * Math.PI);
+        ctx.fill();
+    });
 }
 
 const drawDebugMenu = (canvas, ctx, universe, tick_time, render_time) => {
