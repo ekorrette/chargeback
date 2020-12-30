@@ -1,8 +1,8 @@
 import {memory} from "../pkg/chargeback_bg";
 
-let POSITIVE_COLOR = 'blue'
-let NEGATIVE_COLOR = 'red'
-let BACKGROUND_COLOR = 'black'
+const POSITIVE_COLOR = 'blue'
+const NEGATIVE_COLOR = 'red'
+const BACKGROUND_COLOR = 'black'
 
 const renderCharges = (ctx, universe) => {
 
@@ -59,7 +59,7 @@ const drawDebugMenu = (canvas, ctx, universe, tick_time, render_time) => {
         width: 150,
         height: 80
     }
-    ctx.fillStyle = "black";
+    ctx.fillStyle = "white";
 
     ctx.font = '10px monospace';
     ctx.fillText(`Tick time: ${tick_time.toFixed(2)} ms`, canvas.width - debug.width, canvas.height - debug.height)

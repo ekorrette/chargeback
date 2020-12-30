@@ -1,7 +1,7 @@
 import * as wasm from "chargeback-game";
 
 import { renderPlayer, drawBackground, renderCharges, drawDebugMenu, renderEnemies } from './render';
-import {player_interaction, addListeners} from "./interaction";
+import { player_interaction, addListeners } from "./interaction";
 
 let options = {
     DEBUG: false

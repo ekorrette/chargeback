@@ -30,6 +30,10 @@ impl ChargeSpace {
         self.sign.push(s);
     }
 
+    pub fn pop(&mut self, i: usize) {
+        self.phase.remove(i); self.sign.remove(i);
+    }
+
     pub fn exerted_force(&self, p: Vec2D, sign: i8) -> Vec2D {
         let n = self.len();
         let mut f = Vec2D { x: 0.0, y: 0.0 };
@@ -47,7 +51,7 @@ impl ChargeSpace {
             self.phase[i].v = self.phase[i].v + delta * self.exerted_force(self.phase[i].p, self.sign[i]);
         }
         for i in 0..n {
-            let p1 = self.phase[i].p + delta * self.phase[i].v;
+            let p1 = self.phase[i].p + delta * (self.phase[i].v + Vec2D { x: 0.0, y: 20.0 });
             if p1.x < 0.0 || p1.x > width {
                 self.phase[i].v.x *= -1.0;
             } else if p1.y < 0.0 /* || p1.y > height */ {
@@ -59,7 +63,7 @@ impl ChargeSpace {
         for i in (0..n).rev() {
             let p = self.phase[i].p;
             if (p.x < 0.0 || p.x > width || p.y < 0.0 || p.y > height) || (p.x.is_nan() || p.y.is_nan()) {
-                self.phase.remove(i); self.sign.remove(i);
+                self.pop(i);
             }
         }
     }
