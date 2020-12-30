@@ -100,7 +100,12 @@ const drawDebugMenu = (canvas, ctx, universe, tick_time, render_time) => {
             let alpha = 2*Math.PI*j/16;
             let pri = 100*universe.get_dbg_dir_priority(i, j);
             ctx.beginPath();
-            ctx.strokeStyle = 'green';
+            if(pri < 0) {
+                pri = -pri;
+                ctx.strokeStyle = 'red';
+            } else {
+                ctx.strokeStyle = 'green';
+            }
             ctx.moveTo(it.pos.x, it.pos.y);
             ctx.lineTo(it.pos.x + pri*Math.cos(alpha), it.pos.y + pri*Math.sin(alpha));
             ctx.stroke();
