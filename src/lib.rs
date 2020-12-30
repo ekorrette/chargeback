@@ -67,9 +67,6 @@ impl Universe {
         };
         uni.spawn_enemy(Vec2D { x: 200.0, y: 200.0 }, 5, EnemyState::RandShooterSleeping);
         uni.spawn_enemy(Vec2D { x: 400.0, y: 200.0 }, 5, EnemyState::RandShooterSleeping);
-        uni.spawn_enemy(Vec2D { x: 250.0, y: 200.0 }, 5, EnemyState::RandShooterSleeping);
-        uni.spawn_enemy(Vec2D { x: 300.0, y: 200.0 }, 5, EnemyState::RandShooterSleeping);
-        uni.spawn_enemy(Vec2D { x: 350.0, y: 200.0 }, 5, EnemyState::RandShooterSleeping);
 
         uni
     }

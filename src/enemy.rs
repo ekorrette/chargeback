@@ -48,7 +48,7 @@ impl Enemy {
             Some(x) => x,
             None => (0.0, Vec2D::zero()),
         };
-        self.pos = self.pos + delta * direction * 40.0 * priority.max(0.0).tanh();
+        self.pos = self.pos + delta * direction * 80.0 * priority.max(0.0).tanh();
         // self.pos.x = self.pos.x.max(30.0).min(570.0);
         // self.pos.y = self.pos.y.max(40.0).min(760.0);
     }
@@ -63,7 +63,8 @@ impl Enemy {
         }
 
         // Player
-        val += vec.dot((player.pos - self.pos).norm()) * ((player.pos - self.pos).abs()/300.0 - 1.0).tanh();
+        val += vec.dot((player.pos - self.pos).norm()) * ((player.pos - self.pos).abs()/300.0 - 1.0).tanh() * (if (player.pos - self.pos).abs() < 300.0 { 2.0 } else { 1.0 });
+        val += (1.0 - (0.65 - vec.dot((player.pos - self.pos).norm())).abs()) / 1.5;
 
         // Co-Enemies
         for pos in enemy_pos.iter() {
@@ -71,7 +72,7 @@ impl Enemy {
         }
 
         // Screen
-        let vert = if self.pos.y > 150.0 { -(self.pos.y - 150.0).sqrt() / 100.0 } else { ((150.0 - self.pos.y)/50.0).exp() - 1.0 };
+        let vert = if self.pos.y > 150.0 { -(self.pos.y - 150.0) / 300.0 } else { ((150.0 - self.pos.y)/50.0).exp() - 1.0 };
         val += vec.dot(Vec2D {x: 0.0, y: 1.0}) * vert;
         let hori = (if 100.0 <= self.pos.x && self.pos.x <= 500.0 { 0.0 } else { (100.0 - self.pos.x).max(self.pos.x - 500.0 ) }) / 50.0;
         val += vec.dot(Vec2D {x: 1.0, y: 0.0}) * (hori.exp() - 1.0) * (if self.pos.x < 300.0 { 1.0 } else { -1.0 });
