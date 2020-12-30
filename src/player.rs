@@ -28,7 +28,7 @@ impl Player {
         for i in (0..n).rev() {
             let r = charge_space.phase[i].p - self.pos;
             let f = charge_space.k * (self.charge_sign as f32) * (charge_space.sign[i] as f32)
-                * r.abs().max(4.0).powi(-3) * r;
+                * (r.abs() - 4.0).max(4.0).powi(-3) * r;
 
             charge_space.phase[i].v = charge_space.phase[i].v + delta * f;
         }
