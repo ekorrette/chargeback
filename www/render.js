@@ -13,7 +13,6 @@ neg_image.src = "./assets/neg.png";
 let starlets = [];
 
 const renderCharges = (ctx, universe) => {
-
     let positions = new Float32Array(memory.buffer, universe.phases_ptr(), 4*universe.charges_cnt());
     let signs = new Int8Array(memory.buffer, universe.signs_ptr(), universe.charges_cnt());
 
@@ -39,8 +38,8 @@ const renderEnemies = (ctx, universe) => {
 }
 
 const renderPlayer = (ctx, universe) => {
-    let width = 40;
-    let height = 40;
+    let width = 36;
+    let height = 42;
 
     let player = universe.get_player();
 
