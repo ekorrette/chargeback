@@ -5,7 +5,7 @@ use crate::electro::ChargeSpace;
 use wasm_bindgen::prelude::*;
 
 #[wasm_bindgen]
-#[derive(Copy, Clone)]
+#[derive(Debug, Copy, Clone)]
 pub struct Player {
     pub pos: Vec2D,
     pub charge_sign: i8,

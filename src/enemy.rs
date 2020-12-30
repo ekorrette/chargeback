@@ -3,13 +3,17 @@ use crate::vec2d::Vec2D;
 use crate::player::Player;
 use crate::electro::ChargeSpace;
 
-#[derive(PartialEq)]
+use wasm_bindgen::prelude::*;
+
+#[wasm_bindgen]
+#[derive(Debug, Copy, Clone, PartialEq)]
 pub enum EnemyState {
     RandShooter,
     RandShooterSleeping,
 }
 
-
+#[wasm_bindgen]
+#[derive(Debug, Copy, Clone)]
 pub struct Enemy {
     pub id: i32,
     pub pos: Vec2D,
