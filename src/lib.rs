@@ -111,8 +111,11 @@ impl Universe {
     pub fn signs_ptr(&self) -> *const i8 {
         self.charge_space.sign.as_ptr()
     }
-    pub fn enemies_ptr(&self) -> *const Enemy {
-        self.enemies.as_ptr()
+    pub fn enemies_cnt(&self) -> usize {
+        self.enemies.len()
+    }
+    pub fn enemies_idx(&self, i: usize) -> Enemy {
+        self.enemies[i]
     }
 
     pub fn get_player(&self) -> Player {

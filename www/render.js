@@ -8,7 +8,8 @@ let pos_image = new Image();
 pos_image.src = "./assets/pos.png";
 let neg_image = new Image();
 neg_image.src = "./assets/neg.png";
-
+let enemy_image = new Image();
+enemy_image.src = "./assets/enemy.png";
 
 let starlets = [];
 
@@ -34,7 +35,13 @@ const renderCharges = (ctx, universe) => {
 }
 
 const renderEnemies = (ctx, universe) => {
+    let width = 68;
+    let height = 40;
 
+    for(let i = 0; i < universe.enemies_cnt(); i++) {
+        let it = universe.enemies_idx(i);
+        ctx.drawImage(enemy_image, it.pos.x - width/2, it.pos.y - height*5/6, width, height);
+    }
 }
 
 const renderPlayer = (ctx, universe) => {
@@ -43,7 +50,6 @@ const renderPlayer = (ctx, universe) => {
 
     let player = universe.get_player();
 
-    ctx.beginPath();
     let im = "";
     if(player.charge_sign > 0) {
         im = pos_image;
@@ -52,8 +58,6 @@ const renderPlayer = (ctx, universe) => {
         im = neg_image;
     }
     ctx.drawImage(im, player.pos.x - width/2, player.pos.y - height/2, width, height);
-    // ctx.rect(player.pos.x - width/2, player.pos.y - height/2, width, height);
-    // ctx.fill();
 }
 
 const drawBackground = (canvas, ctx) => {
