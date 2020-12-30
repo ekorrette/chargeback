@@ -38,8 +38,8 @@ const renderEnemies = (ctx, universe) => {
 }
 
 const renderPlayer = (ctx, universe) => {
-    let width = 36;
-    let height = 42;
+    let width = 30;
+    let height = 35;
 
     let player = universe.get_player();
 
