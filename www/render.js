@@ -66,7 +66,7 @@ const drawBackground = (canvas, ctx) => {
     ctx.fillStyle = BACKGROUND_COLOR;
     ctx.fill();
 
-    if(Math.random() <= 0.025) {
+    if(Math.random() <= 0.05) {
         starlets.push({x: Math.random() * 600.0, y: 10.0, f: Math.random() * 100.0});
     }
     while(starlets.length > 0 && starlets[0].y > 800.0) {
@@ -93,6 +93,20 @@ const drawDebugMenu = (canvas, ctx, universe, tick_time, render_time) => {
     ctx.fillText(`Tick time: ${tick_time.toFixed(2)} ms`, canvas.width - debug.width, canvas.height - debug.height)
     ctx.fillText(`Render time: ${render_time.toFixed(2)} ms`, canvas.width - debug.width, canvas.height - debug.height + 20)
     ctx.fillText(`Charge count: ${universe.charges_cnt()} `, canvas.width - debug.width, canvas.height - debug.height + 40)
+
+    let positions = new Float32Array(memory.buffer, universe.phases_ptr(), 4*universe.charges_cnt());
+    for(let i = 0; i < universe.charges_cnt(); i++) {
+        let x = positions[4 * i];
+        let y = positions[4 * i + 1];
+        let vx = positions[4 * i + 2];
+        let vy = positions[4 * i + 3];
+
+        ctx.beginPath();
+        ctx.strokeStyle = 'green';
+        ctx.moveTo(x, y);
+        ctx.lineTo(x+vx/4, y+vy/4);
+        ctx.stroke();
+    }
 
     for(let i = 0; i < universe.enemies_cnt(); i++) {
         let it = universe.enemies_idx(i);
