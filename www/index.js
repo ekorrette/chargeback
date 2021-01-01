@@ -9,7 +9,6 @@ let options = {
 
 let universe = new wasm.Universe();
 console.log(universe);
-universe.populate(20);
 
 
 const canvas = document.getElementById("chargeback-canvas");

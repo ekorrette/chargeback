@@ -83,16 +83,27 @@ const drawBackground = (canvas, ctx) => {
 }
 
 const drawDebugMenu = (canvas, ctx, universe, tick_time, render_time) => {
+
+    let debug_info = [
+        `Tick time: ${tick_time.toFixed(2)} ms`,
+        `Render time: ${render_time.toFixed(2)} ms`,
+        `Charge count: ${universe.charges_cnt()} `,
+        `HP: ${universe.get_player().hp} `,
+        `Charge: ${universe.get_player().charge_sign} `,
+    ]
+
     let debug = {
         width: 150,
-        height: 80
+        height: debug_info.length * 20 + 10
     }
-    ctx.fillStyle = "white";
 
+    ctx.fillStyle = "white";
     ctx.font = '10px monospace';
-    ctx.fillText(`Tick time: ${tick_time.toFixed(2)} ms`, canvas.width - debug.width, canvas.height - debug.height)
-    ctx.fillText(`Render time: ${render_time.toFixed(2)} ms`, canvas.width - debug.width, canvas.height - debug.height + 20)
-    ctx.fillText(`Charge count: ${universe.charges_cnt()} `, canvas.width - debug.width, canvas.height - debug.height + 40)
+
+    debug_info.forEach((str, i) =>
+        ctx.fillText(str, canvas.width - debug.width, canvas.height - debug.height + 20 * i)
+    );
+
 
     let positions = new Float32Array(memory.buffer, universe.phases_ptr(), 4*universe.charges_cnt());
     for(let i = 0; i < universe.charges_cnt(); i++) {
