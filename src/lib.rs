@@ -81,6 +81,7 @@ impl Universe {
                 },
                 Vec2D { x: 0.0, y: 0.0, },
                 2*self.rng.gen_range(0, 2) - 1,
+                0.0,
             );
         }
     }

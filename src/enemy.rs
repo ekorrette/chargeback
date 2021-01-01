@@ -31,9 +31,8 @@ impl Enemy {
     pub fn act(&mut self, t: f32, delta: f32, charge_space: &mut ChargeSpace, player: &Player, enemy_pos: &Vec<Vec2D>, rng: &mut rand::rngs::ThreadRng) {
         let n = charge_space.len();
 
-        for i in 0..n.checked_sub(2).unwrap_or(0) {
-            let p = charge_space.phase[i].p;
-            if self.collision(p.x, p.y) {
+        for i in 0..n {
+            if self.collision(charge_space, i, t) {
                 self.collision_handler(charge_space, i);
                 break;
             }
@@ -49,7 +48,7 @@ impl Enemy {
             if rng.gen_range(0, 20) == 0 && player.pos != self.pos {
                 let v: Vec2D = rng.gen_range(20.0, 40.0) * (player.pos - self.pos).norm();
                 let s: i8 = 2*rng.gen_range(0, 2) - 1;
-                charge_space.push(self.pos, v, s);
+                charge_space.push(self.pos, v, s, t);
                 self.state = EnemyState::RandShooterSleeping;
             }
         }
@@ -93,9 +92,14 @@ impl Enemy {
         (val, vec)
     }
 
-    pub fn collision(&self, x:f32, y:f32) -> bool {
+    pub fn collision(&self, charge_space: &ChargeSpace, i: usize,  t:f32) -> bool {
+        if t - charge_space.created[i] < 5.0 * 0.0166 {
+            return false;
+        }
         // 34, 33    //40*5/6 .-.
         // rect: 6:61, 10:33
+        let x = charge_space.phase[i].p.x;
+        let y = charge_space.phase[i].p.y;
         let xcol = self.pos.x - x - 3.0 <= 28.0 && x - self.pos.x - 3.0 <=27.0;
         let ycol = self.pos.y - y - 3.0 <= 23.0 && y - self.pos.y - 3.0 <= 0.0;
         return xcol && ycol;

@@ -9,29 +9,33 @@ pub struct ChargeSpace {
     pub k: f32,
     pub phase: Vec<ChargePhase>,
     pub sign: Vec<i8>,
+    pub created: Vec<f32>,
 }
 
 impl ChargeSpace {
     pub fn new(k: f32) -> ChargeSpace {
-        ChargeSpace { k, phase: Vec::new(), sign: Vec::new() }
+        ChargeSpace { k, phase: Vec::new(), sign: Vec::new(), created: Vec::new() }
     }
 
     pub fn clear(&mut self) {
         self.phase.clear();
         self.sign.clear();
+        self.created.clear();
     }
 
     pub fn len(&self) -> usize {
         self.phase.len()
     }
 
-    pub fn push(&mut self, p: Vec2D, v: Vec2D, s: i8) {
+    pub fn push(&mut self, p: Vec2D, v: Vec2D, s: i8, t: f32) {
         self.phase.push(ChargePhase {p, v});
         self.sign.push(s);
+        self.created.push(t);
+
     }
 
     pub fn pop(&mut self, i: usize) {
-        self.phase.swap_remove(i); self.sign.swap_remove(i);
+        self.phase.remove(i); self.sign.remove(i); self.created.remove(i);
     }
 
     pub fn exerted_force(&self, p: Vec2D, sign: i8) -> Vec2D {
