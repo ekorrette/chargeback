@@ -93,7 +93,7 @@ impl Enemy {
     }
 
     pub fn collision(&self, charge_space: &ChargeSpace, i: usize,  t:f32) -> bool {
-        if t - charge_space.created[i] < 5.0 * 0.0166 {
+        if t - charge_space.created[i] < 1.0 {
             return false;
         }
         // 34, 33    //40*5/6 .-.

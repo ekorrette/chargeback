@@ -34,6 +34,30 @@ const renderCharges = (ctx, universe) => {
     }
 }
 
+const drawHPBar = (ctx, x, y, fraction) => {
+    const LENGHT = 80;
+    const DIST = 50;
+
+    let bar_x = {start: x - LENGHT/2, end: x + LENGHT/2};
+    bar_x.color_switch = bar_x.start + LENGHT*fraction;
+
+    let bar_y = y - DIST;
+
+    ctx.beginPath();
+    ctx.lineWidth = 3;
+    ctx.strokeStyle = 'green';
+    ctx.moveTo(bar_x.start, bar_y);
+    ctx.lineTo(bar_x.color_switch, bar_y);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.strokeStyle = 'red';
+    ctx.moveTo(bar_x.color_switch, bar_y);
+    ctx.lineTo(bar_x.end, bar_y);
+    ctx.stroke();
+
+    ctx.lineWidth = 1;
+}
+
 const renderEnemies = (ctx, universe) => {
     let width = 68;
     let height = 40;
@@ -41,6 +65,7 @@ const renderEnemies = (ctx, universe) => {
     for(let i = 0; i < universe.enemies_cnt(); i++) {
         let it = universe.enemies_idx(i);
         ctx.drawImage(enemy_image, it.pos.x - width/2, it.pos.y - height*5/6, width, height);
+        drawHPBar(ctx, it.pos.x, it.pos.y, it.hp/5);
     }
 }
 
@@ -103,7 +128,6 @@ const drawDebugMenu = (canvas, ctx, universe, tick_time, render_time) => {
     debug_info.forEach((str, i) =>
         ctx.fillText(str, canvas.width - debug.width, canvas.height - debug.height + 20 * i)
     );
-
 
     let positions = new Float32Array(memory.buffer, universe.phases_ptr(), 4*universe.charges_cnt());
     for(let i = 0; i < universe.charges_cnt(); i++) {
