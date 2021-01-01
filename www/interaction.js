@@ -1,5 +1,9 @@
 let player_interaction = {
-    'left': 0, 'right': 0, 'up': 0, 'down': 0, 'switch_charge': false
+    'left': 0, 'right': 0, 'up': 0, 'down': 0, 'switch_charge': false,
+    'touch': {
+        'x': null,
+        'y': null
+    }
 }
 
 
@@ -47,6 +51,18 @@ const addListeners = (options) => {
                 player_interaction.right = 0;
                 break;
         }
+    }, false);
+
+    document.addEventListener('touchstart', (event) => {
+
+        let touch = event.changedTouches[0];
+        player_interaction.touch.x = touch.pageX;
+        player_interaction.touch.y = touch.pageY;
+    }, false);
+
+    document.addEventListener('touchend', (event) => {
+        player_interaction.touch.x = null;
+        player_interaction.touch.y = null;
     }, false);
 }
 

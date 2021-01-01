@@ -107,14 +107,22 @@ const drawBackground = (canvas, ctx) => {
     });
 }
 
-const drawDebugMenu = (canvas, ctx, universe, tick_time, render_time) => {
-
+const drawDebugMenu = (canvas, ctx, universe, tick_time, render_time, touch_x, touch_y) => {
+    const fix = (x) => {
+        if(x !== null) {
+            return x.toFixed(1);
+        }
+        else {
+            return null;
+        }
+    }
     let debug_info = [
         `Tick time: ${tick_time.toFixed(2)} ms`,
         `Render time: ${render_time.toFixed(2)} ms`,
         `Charge count: ${universe.charges_cnt()} `,
         `HP: ${universe.get_player().hp} `,
         `Charge: ${universe.get_player().charge_sign} `,
+        `Touch: ${fix(touch_x)}, ${fix(touch_y)}`,
     ]
 
     let debug = {

@@ -8,7 +8,6 @@ let options = {
 }
 
 let universe = new wasm.Universe();
-console.log(universe);
 
 const canvas = document.getElementById("chargeback-canvas");
 canvas.width = 600;
@@ -23,6 +22,16 @@ const time = (func) => {
     return after - before;
 }
 
+const getOffsetLeft = (elem) => {
+    let offsetLeft = 0;
+    do {
+        if ( !isNaN( elem.offsetLeft ) ) {
+            offsetLeft += elem.offsetLeft;
+        }
+    } while( elem = elem.offsetParent );
+    return offsetLeft;
+}
+
 const renderLoop = () => {
 
     let tick_time = time(universe.tick.bind(universe));
@@ -35,12 +44,16 @@ const renderLoop = () => {
     });
 
     if(options.DEBUG) {
-        drawDebugMenu(canvas, ctx, universe, tick_time, render_time);
+        drawDebugMenu(canvas, ctx, universe, tick_time, render_time, player_interaction.touch.x, player_interaction.touch.y);
     }
 
     universe.interact(player_interaction.right - player_interaction.left,
                       player_interaction.down - player_interaction.up,
                          player_interaction.switch_charge);
+    if(player_interaction.touch.x) {
+        universe.touch(player_interaction.touch.x - getOffsetLeft(canvas),
+                          player_interaction.touch.y);
+    }
     player_interaction.switch_charge = false;
 
     requestAnimationFrame(renderLoop);

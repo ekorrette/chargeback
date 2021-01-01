@@ -94,6 +94,15 @@ impl Universe {
         }
     }
 
+    pub fn touch(&mut self, x: f32, y: f32) {
+        if (Vec2D{x, y} - self.player.pos).abs() < 50.0 {
+            self.player.switch_charge();
+        }
+        else {
+            self.player.move_in_direction(x - self.player.pos.x, y - self.player.pos.y);
+        }
+    }
+
     pub fn tick(&mut self) {
         self.charge_space.kinetic_tick(self.delta, self.width, self.height);
 
