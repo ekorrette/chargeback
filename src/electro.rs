@@ -31,7 +31,7 @@ impl ChargeSpace {
     }
 
     pub fn pop(&mut self, i: usize) {
-        self.phase.remove(i); self.sign.remove(i);
+        self.phase.swap_remove(i); self.sign.swap_remove(i);
     }
 
     pub fn exerted_force(&self, p: Vec2D, sign: i8) -> Vec2D {

@@ -4,12 +4,11 @@ import { renderPlayer, drawBackground, renderCharges, drawDebugMenu, renderEnemi
 import { player_interaction, addListeners } from "./interaction";
 
 let options = {
-    DEBUG: false
+    DEBUG: true
 }
 
 let universe = new wasm.Universe();
 console.log(universe);
-
 
 const canvas = document.getElementById("chargeback-canvas");
 canvas.width = 600;
@@ -28,9 +27,8 @@ const renderLoop = () => {
 
     let tick_time = time(universe.tick.bind(universe));
 
-    drawBackground(canvas, ctx);
-
     let render_time = time( () => {
+        drawBackground(canvas, ctx);
         renderCharges(ctx, universe);
         renderEnemies(ctx, universe);
         renderPlayer(ctx, universe);

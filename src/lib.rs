@@ -62,7 +62,7 @@ impl Universe {
         let mut uni = Universe {
             t, delta, width, height, rng: rand::thread_rng(),
             charge_space: ChargeSpace::new(k),
-            player: Player { pos: Vec2D { x: width/2.0, y: height/2.0 }, charge_sign: 12, hp: 3, speed: 3.0 },
+            player: Player { pos: Vec2D { x: width/2.0, y: height/2.0 }, charge_sign: 12, hp: 5, speed: 3.0 },
             next_enemy_id: 1, enemies: Vec::new(),
         };
         uni.spawn_enemy(Vec2D { x: 200.0, y: 200.0 }, 5, EnemyState::RandShooterSleeping);
@@ -100,6 +100,7 @@ impl Universe {
         for enemy in self.enemies.iter_mut() {
             enemy.act(self.t, self.delta, &mut self.charge_space, &self.player, &enemy_pos, &mut self.rng);
         }
+        self.enemies.retain(|enemy| {enemy.state != EnemyState::Dead});
 
         self.player.update(self.delta, &mut self.charge_space, &self.enemies);
         self.t += self.delta;

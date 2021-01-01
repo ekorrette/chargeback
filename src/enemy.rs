@@ -12,6 +12,7 @@ const ENEMY_DIRECTIONS: usize = 16;
 pub enum EnemyState {
     RandShooter,
     RandShooterSleeping,
+    Dead,
 }
 
 #[wasm_bindgen]
@@ -28,6 +29,17 @@ pub struct Enemy {
 
 impl Enemy {
     pub fn act(&mut self, t: f32, delta: f32, charge_space: &mut ChargeSpace, player: &Player, enemy_pos: &Vec<Vec2D>, rng: &mut rand::rngs::ThreadRng) {
+        let n = charge_space.len();
+
+        for i in 0..n.checked_sub(2).unwrap_or(0) {
+            let p = charge_space.phase[i].p;
+            if self.collision(p.x, p.y) {
+                self.collision_handler(charge_space, i);
+                break;
+            }
+        }
+
+
         if self.state == EnemyState::RandShooterSleeping {
             if rng.gen_range(0, 60) == 0  {
                 self.state = EnemyState::RandShooter;
@@ -79,5 +91,26 @@ impl Enemy {
 
 
         (val, vec)
+    }
+
+    pub fn collision(&self, x:f32, y:f32) -> bool {
+        // 34, 33    //40*5/6 .-.
+        // rect: 6:61, 10:33
+        let xcol = self.pos.x - x - 3.0 <= 28.0 && x - self.pos.x - 3.0 <=27.0;
+        let ycol = self.pos.y - y - 3.0 <= 23.0 && y - self.pos.y - 3.0 <= 0.0;
+        return xcol && ycol;
+    }
+
+    fn collision_handler(&mut self, charge_space: &mut ChargeSpace, i:usize) {
+        self.hp -= 1;
+        charge_space.pop(i);
+
+        if self.hp <= 0 {
+            self.explode();
+        }
+    }
+
+    fn explode(&mut self) {
+        self.state = EnemyState::Dead;
     }
 }

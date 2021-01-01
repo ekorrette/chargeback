@@ -7,7 +7,7 @@ const addListeners = (options) => {
     document.addEventListener('keydown', (event) => {
         const key_name = event.key;
 
-        console.log(key_name);
+        //console.log(key_name);
 
         switch (key_name) {
             case 'ArrowUp':
