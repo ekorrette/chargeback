@@ -94,8 +94,8 @@ impl Universe {
         }
     }
 
-    pub fn touch(&mut self, x: f32, y: f32) {
-        if (Vec2D{x, y} - self.player.pos).abs() < 50.0 {
+    pub fn touch(&mut self, x: f32, y: f32, single: bool) {
+        if (Vec2D{x, y} - self.player.pos).abs() < 50.0 && single {
             self.player.switch_charge();
         }
         else {
@@ -132,7 +132,6 @@ impl Universe {
     pub fn enemies_idx(&self, i: usize) -> Enemy {
         self.enemies[i]
     }
-
     pub fn get_player(&self) -> Player {
         return self.player;
     }

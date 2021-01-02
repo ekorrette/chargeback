@@ -8,6 +8,7 @@ let options = {
 }
 
 let universe = new wasm.Universe();
+let start_time = performance.now();
 
 const canvas = document.getElementById("chargeback-canvas");
 canvas.width = 600;
@@ -44,7 +45,9 @@ const renderLoop = () => {
     });
 
     if(options.DEBUG) {
-        drawDebugMenu(canvas, ctx, universe, tick_time, render_time, player_interaction.touch.x, player_interaction.touch.y);
+        drawDebugMenu(canvas, ctx, universe, tick_time, render_time,
+            player_interaction.touch.x, player_interaction.touch.y,
+            ((performance.now() - start_time)/1000).toFixed(0));
     }
 
     universe.interact(player_interaction.right - player_interaction.left,
@@ -52,7 +55,7 @@ const renderLoop = () => {
                          player_interaction.switch_charge);
     if(player_interaction.touch.x) {
         universe.touch(player_interaction.touch.x - getOffsetLeft(canvas),
-                          player_interaction.touch.y);
+                          player_interaction.touch.y, player_interaction.touch.single);
     }
     player_interaction.switch_charge = false;
 

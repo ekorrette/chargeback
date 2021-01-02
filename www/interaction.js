@@ -2,7 +2,8 @@ let player_interaction = {
     'left': 0, 'right': 0, 'up': 0, 'down': 0, 'switch_charge': false,
     'touch': {
         'x': null,
-        'y': null
+        'y': null,
+        'single': false
     }
 }
 
@@ -54,15 +55,26 @@ const addListeners = (options) => {
     }, false);
 
     document.addEventListener('touchstart', (event) => {
-
+        event.preventDefault();
         let touch = event.changedTouches[0];
         player_interaction.touch.x = touch.pageX;
         player_interaction.touch.y = touch.pageY;
+        player_interaction.touch.single = true;
+    }, false);
+
+    document.addEventListener('touchmove', (event) => {
+        event.preventDefault();
+        let touch = event.changedTouches[0];
+        player_interaction.touch.x = touch.pageX;
+        player_interaction.touch.y = touch.pageY;
+        player_interaction.touch.single = false;
     }, false);
 
     document.addEventListener('touchend', (event) => {
+        let touch = event.changedTouches[0];
         player_interaction.touch.x = null;
         player_interaction.touch.y = null;
+        player_interaction.touch.single = false;
     }, false);
 }
 

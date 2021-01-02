@@ -107,7 +107,7 @@ const drawBackground = (canvas, ctx) => {
     });
 }
 
-const drawDebugMenu = (canvas, ctx, universe, tick_time, render_time, touch_x, touch_y) => {
+const drawDebugMenu = (canvas, ctx, universe, tick_time, render_time, touch_x, touch_y, time) => {
     const fix = (x) => {
         if(x !== null) {
             return x.toFixed(1);
@@ -123,6 +123,7 @@ const drawDebugMenu = (canvas, ctx, universe, tick_time, render_time, touch_x, t
         `HP: ${universe.get_player().hp} `,
         `Charge: ${universe.get_player().charge_sign} `,
         `Touch: ${fix(touch_x)}, ${fix(touch_y)}`,
+        `Czas gry: ${time}`,
     ]
 
     let debug = {
