@@ -47,13 +47,13 @@ impl Player {
     pub fn collision(&self, x:f32, y:f32) -> bool {
         let first_rect = |x, y| {
             // first rect: 0:29, 14:34
-            let xcol = self.pos.x - x -3.0 <= 15.0 && x - self.pos.x - 3.0 <=14.0;
+            let xcol = self.pos.x - x -3.0 <= 15.0 && x - self.pos.x - 3.0 <= 14.0;
             let ycol = self.pos.y - y -3.0 <= 3.0 && y - self.pos.y - 3.0 <= 17.0;
             xcol && ycol
         };
         let second_rect = |x,y| {
             // second rect: 8:21, 6:34
-            let xcol = self.pos.x - x - 3.0 <= 7.0 && x - self.pos.x - 3.0 <=6.0;
+            let xcol = self.pos.x - x - 3.0 <= 7.0 && x - self.pos.x - 3.0 <= 6.0;
             let ycol = self.pos.y - y - 3.0 <= 11.0 && y - self.pos.y - 3.0 <= 17.0;
             xcol && ycol
         };
